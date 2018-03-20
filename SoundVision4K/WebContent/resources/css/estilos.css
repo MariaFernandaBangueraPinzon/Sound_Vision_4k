@@ -1,0 +1,83 @@
+.tile{
+	max-width: 300px;
+	height: 180px;
+	background-color: #fff;
+	color: rgba(43, 174, 168, 1);
+	position: relative;
+	display: inline-block;
+	box-shadow: 0 1px 7px rgba(0, 0, 0, .2);
+	overflow: hidden;
+	cursor: pointer;
+	margin: 10px;
+}
+.tile:hover > .tile-icon > i,
+.tile:hover > .tile-number{
+	color: rgba(43, 174, 168, 1);
+}
+.tile-title,
+.tile-icon,
+.tile-number{
+	position: absolute;
+}
+.tile-title{
+	height: 40px;
+	line-height: 40px;
+	font-size: 20px;
+	background-color: rgb(43, 174, 168);
+	color: #fff;
+	top: 0;
+	left: 0;
+}
+.tile-icon,
+.tile-number{
+	bottom: 0;
+	height: 140px;
+	width: 150px;
+}
+.tile-icon{
+	left: 0;
+}
+.tile-icon > i{
+	line-height: 140px;
+	font-size: 117px;
+}
+.tile-icon > i,
+.tile-number{
+	color: rgba(43, 174, 168, .4);
+	transition: all .3s ease-in-out;
+}
+.tile-number{
+	right: 0;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+}
+.tile-number > p{
+	font-size: 70px;
+}
+.tile-number > small{
+	font-size: 17px;
+}
+.text-titles{
+	font-family: 'RobotoCondensedLight'
+}
+.tile-title,
+.tile-icon,
+.tile-number{
+	position: absolute;
+}
+.tile-title{
+	height: 40px;
+	line-height: 40px;
+	font-size: 20px;
+	background-color: rgb(43, 174, 168);
+	color: #fff;
+	top: 0;
+	left: 0;
+}
+.full-box{
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	box-sizing: border-box;
+}

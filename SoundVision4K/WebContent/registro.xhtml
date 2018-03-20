@@ -1,0 +1,119 @@
+<!DOCTYPE html >
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<head jsf:id="head">
+<title>registro</title>
+<link rel="stylesheet" href="resources/css/materialize.min.css"></link>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet"></link>
+<meta charset="UTF-8"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+<meta http-equiv="X-UA-Compatible" content="ie=edge"></meta>
+<link rel="stylesheet" type="text/css"
+	href="resources/css/font-awesome.min.css" />
+</head>
+<body>
+	<f:view>
+		<nav class="row teal darken-2 ">
+			<div class="nav-wrapper col hide-on-small-only m7 l7">
+				<div class="brand-logo">
+					<div class="">Sound Vision 4K</div>
+				</div>
+			</div>
+			<div class="col s11 m5 l5 offset-s1">
+				<div class="row ">
+					<a class="col l3 m3 s3  tooltipped"
+						href="#{ingresoBean.enlacePagina(1)}" data-position="bottom"
+						data-delay="50" data-tooltip="Inicio"><i class="fa fa-home "></i></a>
+					<a class="col l3 m3 s3  tooltipped"
+						href="#{ingresoBean.enlacePagina(2)}" data-position="bottom"
+						data-delay="50" data-tooltip="Actualizar Datos"><i
+						class="fa fa-user"></i></a> <a class="col l3 m3 s3   tooltipped"
+						href="" data-position="bottom" data-delay="50"
+						data-tooltip="Mensajes"><i class="fa fa-comment"></i></a> <a
+						class="col l3 m3 s3   tooltipped" href="" data-position="bottom"
+						data-delay="50" data-tooltip="Notificaciones"><i
+						class="fa fa-bell"></i></a>
+				</div>
+			</div>
+		</nav>
+		<div class="row">
+			<div class="col s12">
+				<form jsf:id="formulario">
+
+					<div class="card-panel ">
+						<div class="row">
+							<div class="col s12 m8 offset-m4">
+								<h2>Registro</h2>
+							</div>
+
+							<div class="input-field col s12 m3">
+								<input id="documento" type="text" class="validate"
+									required="required"
+									jsf:value="#{personaBean.miUsuario.documento}" /> <label
+									for="documento">Documento</label>
+							</div>
+							<div class="input-field col s12 m3">
+								<input id="telefono" type="text" class="validate"
+									jsf:value="#{personaBean.miUsuario.telefono}" /> <label
+									for="telefono">Telefono</label>
+							</div>
+							<div class="input-field col s12 m3">
+								<h:selectOneListbox value="#{personaBean.miUsuario.rol}">
+									<f:selectItems value="#{personaBean.listaRol}" />
+								</h:selectOneListbox>
+							</div>
+							<div class="col m3"></div>
+							<div class="input-field col s12 m6">
+								<input id="nombre" type="text" class="validate"
+									required="required" jsf:value="#{personaBean.miUsuario.nombre}" />
+								<label for="nombre">Nombre</label>
+							</div>
+							<div class="input-field col s12 m6">
+								<input id="correo" type="email" class="validate"
+									required="required" jsf:value="#{personaBean.miUsuario.correo}" />
+								<label for="correo">Correo</label>
+							</div>
+							<div class="input-field col s12 m6">
+								<input id="contrasena" type="password" class="validate"
+									required="required" jsf:value="#{personaBean.contrasena}" /> <label
+									for="contrasena">Contraseña</label>
+							</div>
+							<div class="input-field col s12 m6">
+								<input id="repcontra" type="password" class="validate"
+									required="required" jsf:value="#{personaBean.repcontrasena}" />
+								<label for="repcontra">Repetir Contraseña</label>
+							</div>
+							<div class="col m12">
+								<div jsf:id="txtInfo">#{personaBean.respuesta}</div>
+							</div>
+							<div class="col m6  s6 l6 right-align">
+								<a href="controlUsuario.jsf"
+									class="waves-effect waves-light btn">volver</a>
+							</div>
+							<div class="col m6 s6 l6 right-align">
+								<a type="submit" class="waves-effect waves-light btn"
+									jsf:action="#{personaBean.listaUsuario()}"
+									jsf:actionListener="#{personaBean.agregarUsuario()}">Registrar</a>
+							</div>
+
+						</div>
+					</div>
+				</form>
+
+			</div>
+		</div>
+
+	</f:view>
+	<script type="text/javascript" src="resources/js/jquery.js"></script>
+	<script type="text/javascript" src="resources/js/materialize.js"></script>
+	<script> 
+	  $(document).ready(function() {
+		    $('select').material_select();
+		  });
+	</script>
+</body>
+</html>

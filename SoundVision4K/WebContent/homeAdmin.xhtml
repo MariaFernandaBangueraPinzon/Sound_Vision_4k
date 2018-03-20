@@ -1,0 +1,122 @@
+<!DOCTYPE html >
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/templates/Nav.xhtml">
+	<ui:param name="tituloPagina" value="Inicio Administrador" />
+	<body>
+		<ui:define name="contenido">
+			<div class="section white">
+				<div class="row container">
+					<div class="col s12 center">
+						<h2 class="header">Bienvenido Administrador</h2>
+						<div class="divider"></div>
+					</div>
+					<h:form>
+						<div class="row">
+							<div class="col s12 m6 l6">
+								<div class="card green white z-depth-4">
+									<div class="card-content black-text row center">
+										<span class="card-title center">Instructores</span><i
+											class="fa fa-users fa-5x"></i>
+										<h2 class="col s6 m12 l6">#{personaBean.contador()}</h2>
+										<h6 class="col s6 m12 l6">Registrados</h6>
+										<div class="col s9 m12 l12 xl12 offset-s2">
+											<a type="submit"
+												class="waves-effect waves-light btn  col s12"
+												jsf:actionListener="#{personaBean.listaUsuario()}"
+												jsf:action="controlUsuario.jsf">control usuarios</a>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col s12 m6 l6">
+								<div class="card green white z-depth-4">
+									<div class="card-content Black-text row center">
+										<span class="card-title center">Reservas</span>
+										<div jsf:rendered="#{not ingresoBean.visible}">
+											<i class="fa fa-calendar fa-5x"></i>
+											<h2 class="col s6 m12 l6">10</h2>
+											<h6 class="col s6 m12 l6">Reservas</h6>
+											<div class="col s9 m12 l12 xl12 offset-s2">
+												<a type="submit"
+													class="waves-effect waves-light btn  col s12"
+													jsf:actionListener="#{ingresoBean.accionar}">Control
+													Reservas</a>
+											</div>
+										</div>
+										<h:form rendered="#{ingresoBean.visible}">
+											<div id="" class="">
+												<div class="container">
+													<div class="modal-content center">
+														<p>Escoja
+															el ambiente:</p>
+
+														<div class="">
+															<h:selectOneMenu value="#{ingresoBean.nombreAmbiente}">
+																<f:selectItems value="#{ingresoBean.ambientes}" />
+															</h:selectOneMenu>
+														</div>
+
+														<input type="text" id="fecha" value="Eliga la Fecha"
+															style="margin-top: -2px" class="datepicker"
+															jsf:value="#{ingresoBean.fecha}" required="required" />
+													</div>
+
+													<div class="">
+														<h:commandButton class="btn col s12 m12 l6 xl5"
+															action="#{ingresoBean.hacerCronograma()}"
+															value="Siguiente"></h:commandButton>
+														<h:commandButton class="btn col s12 m12 l6 xl5"
+															actionListener="#{ingresoBean.accionar}" value="Cancelar"
+															style="margin-left: 10px;"></h:commandButton>
+
+													</div>
+												</div>
+											</div>
+										</h:form>
+
+									</div>
+								</div>
+							</div>
+							<div class="col s12 m6 l6 offset-l3 ">
+								<div class="card  green white z-depth-4">
+									<div class="card-content Black-text row center">
+										<span class="card-title center">Ambientes</span> <i
+											class="fa fa-home fa-5x"></i>
+										<h2 class="col s6 m12 l6">3</h2>
+										<h6 class="col s6 m12 l6">Reservas</h6>
+										<div class="col s9 m12 l12 xl12 offset-s2">
+											<a type="submit"
+												class="waves-effect waves-light btn  col s12 l12 m12"
+												jsf:actionListener="#{personaBean.listaAmbiente()}"
+												jsf:action="ambientes.jsf">Control Ambientes</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</h:form>
+				</div>
+			</div>
+			<script type="text/javascript" src="resources/js/jquery.js"></script>
+			<script type="text/javascript" src="resources/js/materialize.js"></script>
+			<script>
+				$(document).ready(function() {
+					$('.parallax').parallax();
+				});
+				$('.datepicker').pickadate({
+					selectMonths : true, // Creates a dropdown to control month
+					selectYears : 15, // Creates a dropdown of 15 years to control year,
+					today : 'hoy',
+					clear : 'Limpiar',
+					close : 'listo',
+					closeOnSelect : true
+				// Close upon selecting a date,
+				});
+			</script>
+		</ui:define>
+	</body>
+</ui:composition>

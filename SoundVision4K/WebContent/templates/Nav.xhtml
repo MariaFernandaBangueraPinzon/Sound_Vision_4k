@@ -1,0 +1,92 @@
+<!DOCTYPE html >
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<head>
+<link rel="stylesheet" href="resources/css/materialize.css"></link>
+<link rel="stylesheet" href="resources/css/estiloNotificaciones.css"></link>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet"></link>
+<meta charset="UTF-8"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+<meta http-equiv="X-UA-Compatible" content="ie=edge"></meta>
+<link rel="stylesheet" type="text/css"
+	href="resources/css/font-awesome.min.css" />
+<title>#{tituloPagina}</title>
+</head>
+<body>
+<h:form>
+	<nav class="row teal darken-2 ">
+		<div class="nav-wrapper col s12 m7 l7">
+			<div class="brand-logo ">
+				<div class="no">Sound Vision 4K</div>
+			</div>
+		</div>
+		<div class="col s3 offset-m2 ">
+			<div class="col s12 offset-m2  ">
+				<div class="row ">
+					<a class="col l3 m3 s1  tooltipped" href="ingresoadmin.jsf"
+						data-position="bottom" data-delay="50" data-tooltip="Inicio"><i
+						class="fa fa-home "></i></a> 
+						
+					<a class="col l3 m3 s1   tooltipped"
+						href="" data-position="bottom" data-delay="50"
+						data-tooltip="Perfil"><i class="fa fa-user"></i></a> 
+						
+					<a class="col l2 m3 s1   tooltipped" href="" data-position="bottom"
+						data-delay="50" data-tooltip="Observaciones"><i
+						class="fa fa-comment"></i></a> 
+					<div class= "accion col s1">1</div>
+					<a class="col l2 m2 s1   tooltipped"
+						href="" data-position="bottom" data-delay="50"
+						data-tooltip="Notificaciones"
+						jsf:actionListener="#{ingresoBean.activarNotificaciones}"><i
+						class="fa fa-bell"></i></a>
+					<div class= "accion col s1">3</div>
+
+
+				</div>
+			</div>
+		</div>
+	</nav>
+	<h:dataTable class="tabla" value="#{ingresoBean.notificacion}"
+		var="datos" rendered="#{ingresoBean.notificaciones}">
+
+		<h:column>
+
+			<f:facet name="header">Notificaciones</f:facet>
+												#{datos.descripcion}
+							<h:commandButton rendered="#{ingresoBean.administrador}"
+				actionListener="#{ingresoBean.aceptarSolicitud(datos.reserva, datos.codigo)}"
+				value="Aceptar" />
+			<h:commandButton rendered="#{ingresoBean.administrador}"
+				actionListener="#{ingresoBean.rechazarSolicitud}" value="Rechazar" />
+			<f:param name="reserva" value="#{datos.reserva}" />
+			<f:param name="informe" value="#{datos.codigo}" />
+		</h:column>
+		<h:column>
+			<f:facet name="header"><a jsf:actionListener="#{ingresoBean.activarNotificaciones}">X</a></f:facet>
+			<label></label>
+		</h:column>
+	</h:dataTable>
+	<h:dataTable class="tabla" value="#{ingresoBean.observaciones}"
+		var="datos2" rendered="#{ingresoBean.observacion}">
+		<h:column>
+			<f:facet name="header">Observaciones</f:facet>
+												#{datos2.descripcion}
+		</h:column>
+	</h:dataTable>
+	</h:form>
+	<ui:insert name="contenido" />
+
+	<script type="text/javascript" src="resources/js/jquery.js"></script>
+	<script type="text/javascript" src="resources/js/materialize.js"></script>
+	<script>
+	   $(document).ready(function(){
+		      $('.parallax').parallax();
+		    });
+	</script>
+</body>
+</html>

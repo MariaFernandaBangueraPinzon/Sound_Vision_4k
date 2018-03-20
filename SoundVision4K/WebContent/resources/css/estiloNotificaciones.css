@@ -1,0 +1,27 @@
+
+.accion {
+	display: inline-block;
+	font-family: 'helvetica neue', Helvetica, Arial, sans-serif;
+	font-size: 10px;
+	-webkit-font-smoothing: subpixel-antialiased;
+	line-height: 1.3;
+	min-height: 13px;
+	display: flex;
+	position: fixed;
+	right: 40px;
+	top: 20px;
+	background-color: #fa3e3e;
+	border-radius: 2px;
+	color: #fff;
+	padding: 1px 3px;
+}
+
+.tabla{
+	display: inline-block;
+    right: 0px;
+    position: fixed;
+    top: 10px;
+    width: 300px;
+    background-color: #9ac7cc;
+    padding: 0px 15px 15px 15px;
+}

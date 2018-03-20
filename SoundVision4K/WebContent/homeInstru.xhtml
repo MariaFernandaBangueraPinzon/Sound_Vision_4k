@@ -1,0 +1,153 @@
+<!DOCTYPE html >
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:jsf="http://xmlns.jcp.org/jsf"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="/templates/Nav.xhtml">
+	<ui:param name="tituloPagina" value="Inicio Instructor" />
+	<body>
+		<ui:define name="contenido">
+			<div class="section white">
+				<div class="row container">
+					<div class="col s12 center">
+						<h2 class="header">Bienvenido Instructor
+							#{ingresoBean.miUsuario.nombre}</h2>
+						<div class="divider"></div>
+					</div>
+					<h:form>
+						<article class="row">
+							<div class="col s12">
+								<div class="col s12 m6 l7 offset-l2">
+									<div class="card green white z-depth-4">
+										<div class="card-content Black-text row center">
+											<span class="card-title center">¡Reserve aqui!</span>
+											<div jsf:rendered="#{not ingresoBean.visible}">
+											<i
+												class="fa fa-calendar fa-5x"></i> <br /> <br />
+											<div class="col s12">
+												<a type="submit"
+													class="waves-effect waves-light btn  col s12"
+													jsf:actionListener="#{ingresoBean.accionar}">Reservar</a>
+											</div>
+											</div>
+											<h:form rendered="#{ingresoBean.visible}">
+											<div id="" class="">
+												<div class="container">
+													<div class="modal-content center">
+														<p jsf:rendered="#{not ingresoBean.mesaAyuda}">Escoja
+															el ambiente:</p>
+
+														<div class="">
+															<h:selectOneMenu value="#{ingresoBean.nombreAmbiente}" rendered="#{not ingresoBean.mesaAyuda}">
+																<f:selectItems value="#{ingresoBean.ambientes}" />
+															</h:selectOneMenu>
+														</div>
+
+														<input type="text" id="fecha" value="Eliga la Fecha"
+															style="margin-top: -2px" class="datepicker"
+															jsf:value="#{ingresoBean.fecha}" required="required" />
+															<label jsf:value="#{ingresoBean.mensaje}"></label>
+													</div>
+
+													<div class="">
+														<h:commandButton class="btn col s12 m12 l6 xl5"
+															action="#{ingresoBean.hacerCronograma()}"
+															value="Siguiente"></h:commandButton>
+														<h:commandButton class="btn col s12 m12 l6 xl5"
+															actionListener="#{ingresoBean.accionar}" value="Cancelar"
+															style="margin-left: 10px;"></h:commandButton>
+														
+													</div>
+												</div>
+											</div>
+										</h:form>
+										</div>
+									</div>
+								</div>
+								<div class="col s12 m6 l3">
+									<a type="submit"
+										class="waves-effect waves-light btn  col s12 modal-trigger boton"
+										href="#modal1">Observaciones</a>
+								</div>
+							</div>
+						</article>
+					</h:form>
+				</div>
+				<form>
+					<div id="modal1" class="modal">
+
+						<div class="modal-content row">
+							<h4 class="center-align">Novedad</h4>
+							<div class="divider" />
+							<h6>Los Servicios ofrecidos por Expedia (tal y como se
+								definen más adelante) solamente pueden ser utilizados por los
+								Clientes que hayan leído por en su integridad estos Términos y
+								Condiciones Generales y los hayan aceptado incondicionalmente
+								haciendo clic en la casilla correspondiente provista para tal
+								fin. Sin esta aceptación, no es posible continuar con el proceso
+								de reserva. El Cliente se compromete a cumplir con las
+								obligaciones contenidas en estos Términos y Condiciones
+								Generales. El contrato suscrito entre el Cliente y Expedia
+								entrará en vigor en el momento en que Expedia proporcione
+								confirmación por escrito de la reserva al Cliente por correo
+								electrónico. El Cliente deberá guardar o imprimir una copia de
+								estos Términos y Condiciones Generales para consultarlos en el
+								futuro cuando haga una reserva.</h6>
+							<div class="input-field col s12 m5">
+								<input id="cedula" type="text"
+									value="#{ingresoBean.miUsuario.documento}" class="validate"
+									disabled="disabled" /><label for="cedula">Cedula
+									Instructor</label>
+							</div>
+							<div class="col s12 m6 offset-m1">
+								<label for="last_name">Instructor a cargo</label>
+								<h:selectOneMenu id="rol" class="browser-default"
+									value="#{ingresoBean.miAmbiente.administradorAmb}"
+									required="required">
+									<f:selectItem itemValue="12399" itemLabel="Erika Pedroza" />
+									<f:selectItem itemValue="1234567890" itemLabel="Jose Palomino" />
+								</h:selectOneMenu>
+							</div>
+							<div class="input-field col s12">
+								<label for="desc">Observación</label>
+								<h:inputTextarea value="#{ingresoBean.miAmbiente.descripcion}"
+									id="desc" class="materialize-textarea" />
+							</div>
+						</div>
+							<div class="modal-footer row">
+							<h:form>
+								<div class="col s12 m4 offset-m4">
+									<input type="submit"
+										jsf:action="#{ingresoBean.enlacePagina(1)}"
+										class="waves-effect waves-light btn  col s12" value="Cancelar"></input>
+								</div>
+								<div class="col s12 m4">
+									<input type="submit"
+										jsf:action="#{ingresoBean.observaciones()}"
+										class="waves-effect waves-light btn  col s12" value="Aceptar"></input>
+								</div>
+								</h:form>
+							</div>
+					</div>
+				</form>
+			</div>
+			<script type="text/javascript" src="resources/js/jquery.js"></script>
+			<script type="text/javascript" src="resources/js/materialize.js"></script>
+			<script type="text/javascript">
+			  	  $(document).ready(function(){
+				  	  $('.modal').modal();
+			  });
+			  	$('.datepicker').pickadate({
+					selectMonths : true, // Creates a dropdown to control month
+					selectYears : 15, // Creates a dropdown of 15 years to control year,
+					today : 'hoy',
+					clear : 'Limpiar',
+					close : 'listo',
+					closeOnSelect : true
+				// Close upon selecting a date,
+				});
+			</script>
+		</ui:define>
+	</body>
+</ui:composition>
