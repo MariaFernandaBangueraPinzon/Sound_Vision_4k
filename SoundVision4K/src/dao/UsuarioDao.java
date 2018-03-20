@@ -92,6 +92,7 @@ public class UsuarioDao {
 					miUsuario.setCorreo(result.getString("emailUsu"));
 				} else {
 					System.out.println("El usuario no esta registrado");
+					miUsuario=null;
 				}
 
 			}

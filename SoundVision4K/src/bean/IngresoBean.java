@@ -371,7 +371,7 @@ public class IngresoBean {
 			}
 			}else{
 				for (int i = 0; i < listaAmbiente.size(); i++) {
-					if(listaAmbiente.get(i).getNombre().equalsIgnoreCase("Audiovisuales 1")){
+					if(listaAmbiente.get(i).getNombre().equalsIgnoreCase("Audiovisual 1")){
 						ambiente=listaAmbiente.get(i).getCodAmbiente();
 					}
 				}
@@ -379,7 +379,7 @@ public class IngresoBean {
 			int resp=0;
 			String direccion="";
 			if(mesaAyuda==true){
-				resp=miUsuarioDao.validarFecha(fecha,0);
+				resp=miUsuarioDao.validarFecha(fecha, 0);
 			}else{
 				resp=miUsuarioDao.validarFecha(fecha,3);
 			}
