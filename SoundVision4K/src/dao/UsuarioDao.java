@@ -884,7 +884,7 @@ public class UsuarioDao {
 		return miCronograma;
 	}
 
-	public void reservarVideoconferencia(String horaEntrada, String horaSalida, String fecha) {
+	public void reservarVideoconferencia(String horaEntrada, String horaSalida, String fecha, int ambiente) {
 		reservasEnHora = new ArrayList<>();
 		System.out.println("1");
 		if (!(verDiponibilidad(fecha, horaSalida, horaEntrada, 5, "horarioSolicitud") == true)
@@ -962,7 +962,7 @@ public class UsuarioDao {
 				e.printStackTrace();
 			}
 		}
-		reservar(horaEntrada, horaSalida, "Videoconferencia", 5, fecha);
+		reservar(horaEntrada, horaSalida, "Videoconferencia", ambiente, fecha);
 	}
 
 	ArrayList<ReservaVo> reservasEnHora;
@@ -972,7 +972,6 @@ public class UsuarioDao {
 		int horaEntradaR;
 		int horaSalidaR;
 		boolean disponibilidad = true;
-		String consulta = "";
 
 		for (int j = 0; j < reservasEnRango.size(); j++) {
 			pos = 0;

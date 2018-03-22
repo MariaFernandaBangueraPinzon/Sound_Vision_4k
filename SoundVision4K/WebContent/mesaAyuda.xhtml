@@ -11,15 +11,16 @@
 		<h:form class="container">
 			<h1 class="col s12">Reserve una videoconferencia</h1>
 			<label class="col s12">Hora de salida</label>
-			 <input type="text" class="timepicker col s9"
+			 <input type="text" class="timepicker col s12"
 									jsf:value="#{ingresoBean.horaSalida}"></input>
-			<label class="col s12">Recuerde que la hora de salida debe ser en punto y entre las 6:00AM y 10:00PM.</label>
-			
+			<div class="col s12">
+			<label >Recuerde que la hora de salida debe ser en punto y entre las 6:00AM y 10:00PM.</label>
+			</div>
 			<h:commandLink class="btn col s6"
-				action="#{ingresoBean.eliminarYReservar()}">Reservar
+				actionListener="#{ingresoBean.eliminarYReservar()}" action="index2">Reservar
 				videoconferencia </h:commandLink>
           </h:form>
-			<h:outputText value="#{ingresoBean.mensaje}" />
+			
 			<script type="text/javascript" src="resources/js/jquery.js" />
 			<script type="text/javascript" src="resources/js/materialize.js" />
 

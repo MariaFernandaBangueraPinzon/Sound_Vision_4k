@@ -60,9 +60,7 @@
 					actionListener="#{ingresoBean.aceptarSolicitud(datos.reserva, datos.codigo)}"
 					value="Aceptar" />
 				<h:commandButton rendered="#{ingresoBean.administrador}"
-					actionListener="#{ingresoBean.rechazarSolicitud}" value="Rechazar" />
-				<f:param name="reserva" value="#{datos.reserva}" />
-				<f:param name="informe" value="#{datos.codigo}" />
+					actionListener="#{ingresoBean.rechazarSolicitud(datos.reserva, datos.codigo)}" value="Rechazar" />
 			</h:column>
 			<h:column>
 				<f:facet name="header">

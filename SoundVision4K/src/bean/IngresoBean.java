@@ -360,7 +360,7 @@ public class IngresoBean {
 				visible= false;
 			}
 		}
-		@SuppressWarnings("deprecation")
+		
 		public String hacerCronograma(){
 			if(mesaAyuda==false){
 				for (int j = 0; j < listaAmbiente.size(); j++) {
@@ -416,28 +416,18 @@ public class IngresoBean {
 		}
 		
 		public void aceptarSolicitud(int reserva, int informe){
-			//FacesContext facesContext = FacesContext.getCurrentInstance();
-			//Map params= facesContext.getExternalContext().getRequestParameterMap();
-			System.out.println(reserva);
-			System.out.println(informe);
-			//int reserva= Integer.parseInt((String) params.get("reserva"));
-			//int informe= Integer.parseInt((String) params.get("informe"));
 			miUsuarioDao.RespuestaSolicitud(reserva, "aceptada", informe);
 		}
 		
-		public void rechazarSolicitud(){
-			FacesContext facesContext = FacesContext.getCurrentInstance();
-			Map params= facesContext.getExternalContext().getRequestParameterMap();
-			
-			int reserva= Integer.parseInt((String) params.get("reserva"));
-			int informe= Integer.parseInt((String) params.get("informe"));
+		public void rechazarSolicitud(int reserva, int informe){
 			miUsuarioDao.RespuestaSolicitud(reserva, "rechazada", informe);
 		}
 		
 		public void eliminarYReservar(){
 			horaSalida=cambiarHora(horaSalida);
 			System.out.println("Hora Salida" + horaSalida);
-			miUsuarioDao.reservarVideoconferencia(horaEntrada, horaSalida, fecha);
+			miUsuarioDao.reservarVideoconferencia(horaEntrada, horaSalida, fecha, ambiente);
+			cronograma=miUsuarioDao.verCronograma(fecha, ambiente);
 		}
 		
 		public String getFecha() {
