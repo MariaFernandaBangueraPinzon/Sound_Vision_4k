@@ -11,7 +11,9 @@
 			<div class="section white">
 				<div class="row container">
 					<div class="col s12 center">
-						<h2 class="header">Bienvenido Instructor
+						<h2 jsf:rendered="#{not ingresoBean.mesaAyuda}" class="header">Bienvenido Instructor
+							#{ingresoBean.miUsuario.nombre}</h2>
+						<h2 jsf:rendered="#{ingresoBean.mesaAyuda}" class="header">Bienvenido
 							#{ingresoBean.miUsuario.nombre}</h2>
 						<div class="divider"></div>
 					</div>
@@ -65,7 +67,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="col s12 m6 l3">
+								<div jsf:rendered="#{not ingresoBean.mesaAyuda}" class="col s12 m6 l3">
 									<a type="submit"
 										class="waves-effect waves-light btn  col s12 modal-trigger boton"
 										href="#modal1">Observaciones</a>

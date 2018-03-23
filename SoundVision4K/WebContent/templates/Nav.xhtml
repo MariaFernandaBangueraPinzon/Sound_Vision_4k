@@ -36,9 +36,12 @@
 							href="#{ingresoBean.enlacePagina(2)}" data-position="bottom"
 							data-delay="50" data-tooltip="Perfil"><i class="fa fa-user"></i></a>
 
-						<a class="col l3 m3 s3   tooltipped" href=""
-							data-position="bottom" data-delay="50"
-							data-tooltip="Observaciones"><i class="fa fa-comment"></i></a> <a
+						<a jsf:rendered="#{not ingresoBean.mesaAyuda}"
+							class="col l3 m3 s3   tooltipped" href="" data-position="bottom"
+							data-delay="50" data-tooltip="Observaciones"
+							jsf:actionListener="#{ingresoBean.activarObservaciones}"><i
+							class="fa fa-comment"></i></a> <a
+							jsf:rendered="#{not ingresoBean.mesaAyuda}"
 							class="col l3 m3 s3  tooltipped" href="" data-position="bottom"
 							data-delay="50" data-tooltip="Notificaciones"
 							jsf:actionListener="#{ingresoBean.activarNotificaciones}"><i
@@ -60,7 +63,8 @@
 					actionListener="#{ingresoBean.aceptarSolicitud(datos.reserva, datos.codigo)}"
 					value="Aceptar" />
 				<h:commandButton rendered="#{ingresoBean.administrador}"
-					actionListener="#{ingresoBean.rechazarSolicitud(datos.reserva, datos.codigo)}" value="Rechazar" />
+					actionListener="#{ingresoBean.rechazarSolicitud(datos.reserva, datos.codigo)}"
+					value="Rechazar" />
 			</h:column>
 			<h:column>
 				<f:facet name="header">
@@ -74,7 +78,13 @@
 			<h:column>
 				<f:facet name="header">Observaciones</f:facet>
 												#{datos2.descripcion}
-		</h:column>
+			</h:column>
+			<h:column>
+				<f:facet name="header">
+					<a jsf:actionListener="#{ingresoBean.activarObservaciones}">X</a>
+				</f:facet>
+				<label></label>
+			</h:column>
 		</h:dataTable>
 	</h:form>
 	<ui:insert name="contenido" />
@@ -82,9 +92,9 @@
 	<script type="text/javascript" src="resources/js/jquery.js"></script>
 	<script type="text/javascript" src="resources/js/materialize.js"></script>
 	<script>
-	   $(document).ready(function(){
-		      $('.parallax').parallax();
-		    });
+		$(document).ready(function() {
+			$('.parallax').parallax();
+		});
 	</script>
 </body>
 </html>

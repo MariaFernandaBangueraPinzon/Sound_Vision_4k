@@ -57,6 +57,16 @@ public class PersonaBean {
 		return a;
 	}
 
+	public int contadorReservas() {
+		int a = miUsuarioDao.contadorReservas();
+		return a;
+	}
+
+	public int contadorAmbientes() {
+		int a = miUsuarioDao.contadorAmbientes();
+		return a;
+	}
+	
 	public String agregarUsuario() {
 
 		miUsuario.setContrasena(contrasena);

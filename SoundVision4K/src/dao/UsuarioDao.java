@@ -277,6 +277,63 @@ public class UsuarioDao {
 
 		return a;
 	}
+	
+	public int contadorReservas(){
+		prepararConexion();
+		ResultSet result = null;
+		int a = 0;
+		connection = miConexion.getConnection();
+
+		String consulta = "SELECT COUNT(*) FROM reservaAmb;";
+
+		try {
+			if (connection != null) {
+				statement = connection.prepareStatement(consulta);
+
+				result = statement.executeQuery();
+
+				if (result.next() == true) {
+					a = result.getInt("count(*)");
+				}
+
+			}
+		} catch (SQLException e) {
+			System.out.println("Error en la consulta del usuario: " + e.getMessage());
+		} finally {
+			miConexion.desconectar();
+		}
+
+		return a;
+	}
+	
+	public int contadorAmbientes(){
+		prepararConexion();
+		ResultSet result = null;
+		int a = 0;
+		connection = miConexion.getConnection();
+
+		String consulta = "SELECT COUNT(*) FROM ambienteesp;";
+
+		try {
+			if (connection != null) {
+				statement = connection.prepareStatement(consulta);
+
+				result = statement.executeQuery();
+
+				if (result.next() == true) {
+					a = result.getInt("count(*)");
+				}
+
+			}
+		} catch (SQLException e) {
+			System.out.println("Error en la consulta del usuario: " + e.getMessage());
+		} finally {
+			miConexion.desconectar();
+		}
+
+		return a;
+	}
+	
 
 	public ArrayList<Ambiente> obtenerListaInventario() {
 		Connection connection = null;
