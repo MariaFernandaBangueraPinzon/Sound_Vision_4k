@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import bean.MandarEmail;
 import conexion.Conexion;
 import vo.Ambiente;
 import vo.CronogramaVo;
@@ -16,6 +17,7 @@ import vo.Usuario;
 
 public class UsuarioDao {
 
+	MandarEmail email;
 	String tablaHora;
 	String tabla;
 	String resp = "";
@@ -900,6 +902,7 @@ public class UsuarioDao {
 						result.getString("fechaReser"), result.getString("HoraLlegadaReser"),
 						result.getString("HoraSalidaReser"), result.getInt("ambienteReser"),
 						result.getString("motivoReser")));
+				
 				disponibilidad = "Solicitado.";
 				reserva=result.getInt("codReser");
 			} else {
@@ -914,8 +917,14 @@ public class UsuarioDao {
 							result.getString("fechaReser"), result.getString("HoraLlegadaReser"),
 							result.getString("HoraSalidaReser"), result.getInt("ambienteReser"),
 							result.getString("motivoReser")));
-					disponibilidad = "Reservado.";
+					if(result.getString("usuarioReser").equals(miUsuario.getDocumento())){
+						disponibilidad="Reservado por mi";
+						accion="Eliminar mi reserva";
+					}else{
+						disponibilidad = "Reservado.";
+					}
 					
+					reserva=result.getInt("codReser");
 				} else {
 					accion = "Reservar";
 				}
@@ -941,6 +950,7 @@ public class UsuarioDao {
 		return miCronograma;
 	}
 
+	@SuppressWarnings("resource")
 	public void reservarVideoconferencia(String horaEntrada, String horaSalida, String fecha, int ambiente) {
 		reservasEnHora = new ArrayList<>();
 		System.out.println("1");
@@ -948,6 +958,7 @@ public class UsuarioDao {
 				|| !(verDiponibilidad(fecha, horaSalida, horaEntrada, 5, "horarioReser") == true)) {
 			String consulta = "";
 			String fechaC = "";
+			String correo="";
 			String horaE = "";
 			String horaS = "";
 			ResultSet result = null;
@@ -965,6 +976,13 @@ public class UsuarioDao {
 						fechaC = result.getString("fechaReser");
 						horaE = result.getString("horaLlegadaReser");
 						horaS = result.getString("horaSalidaReser");
+						consulta = "SELECT * FROM usuarioReser where cedulaUsu = ?";
+						statement = connection.prepareStatement(consulta);
+						statement.setString(1, usuario);
+						result = statement.executeQuery();
+						if(result.next()){
+							correo=result.getString("emailUsu");
+						}
 					} else {
 						System.out.println("4");
 						consulta = "select * from solicitudReserva where codReser=?";
@@ -1014,6 +1032,9 @@ public class UsuarioDao {
 							+ " fue eliminada por motivo de una videoconferencia," + " disculpe la molestia");
 					statement.setInt(5, reservasEnHora.get(i).getCodigo());
 					statement.execute();
+					email = new MandarEmail();
+					email.enviarCorreo("soundvision4k2@gmail.com", correo, "proyectoSoundVision4k", "Novedad en su reserva", "La reserva para el " + fechaC + " desde " + horaE + " hasta " + horaS
+							+ " fue eliminada por motivo de una videoconferencia," + " disculpe la molestia");
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -1175,6 +1196,7 @@ public class UsuarioDao {
 		String horaSalida = "";
 		String motivo = "";
 		int ambiente = 0;
+		String correo="";
 		String descripcion = "rechazada";
 		prepararConexion();
 		ResultSet result = null;
@@ -1192,12 +1214,13 @@ public class UsuarioDao {
 				ambiente = result.getInt("ambienteReser");
 				horaSalida = result.getString("horaSalidaReser");
 			}
-			System.out.println(usuario);
-			System.out.println(fecha);
-			System.out.println(horaEntrada);
-			System.out.println(motivo);
-			System.out.println(ambiente);
-			System.out.println(horaSalida);
+			consulta = "SELECT * FROM usuarioReser where cedulaUsu = ?";
+			statement = connection.prepareStatement(consulta);
+			statement.setString(1, usuario);
+			result = statement.executeQuery();
+			if(result.next()){
+				miUsuario.setCorreo(result.getString("emailUsu"));
+			}
 			if (respuesta.equals("aceptada")) {
 				descripcion = "aceptada";
 				aceptado(usuario, fecha, horaEntrada, horaSalida, motivo, ambiente);
@@ -1224,6 +1247,9 @@ public class UsuarioDao {
 					+ horaSalida + " fue " + descripcion);
 			statement.setInt(5, reserva);
 			statement.execute();
+			email = new MandarEmail();
+			email.enviarCorreo("soundvision4k2@gmail.com", correo, "proyectoSoundVision4k", "Respuesta solicitud", "La solicitud de reserva para el " + fecha + " desde " + horaEntrada + " hasta "
+					+ horaSalida + " con motivo "+motivo+" fue " + descripcion);
 
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -1235,7 +1261,7 @@ public class UsuarioDao {
 		prepararConexion();
 		ResultSet result=null;
 		String mensaje = "";
-		String consulta = "SELECT * FROM "+ tabla +"where codReser=?";
+		String consulta = "SELECT * FROM "+ tabla +" where codReser=?";
 		try {
 			statement = connection.prepareStatement(consulta);
 			statement.setInt(1, reserva);
@@ -1270,6 +1296,44 @@ public class UsuarioDao {
 
 	public void setPos(int pos) {
 		this.pos = pos;
+	}
+
+	public ArrayList<ReservaVo> verMisReservas() {
+		prepararConexion();
+		ArrayList<ReservaVo> misReservas= new ArrayList<>();
+		ResultSet result=null;
+		String consulta="SELECT * FROM reservaamb where usuarioReser = ?";
+		try {
+			statement = connection.prepareStatement(consulta);
+			statement.setString(1, miUsuario.getDocumento());
+			result=statement.executeQuery();
+			while(result.next()){
+				misReservas.add(new ReservaVo(result.getInt("codReser"),
+						"", 
+						result.getString("fechaReser"),
+						result.getString("horaLlegadaReser"),
+						result.getString("horaSalidaReser"),
+						result.getInt("ambienteReser"),
+						result.getString("motivoReser")));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return misReservas;
+	}
+
+	public void eliminarMiReserva(int codigo) {
+		prepararConexion();
+		String consulta="delete FROM reservaamb where codReser = ?";
+		try {
+			statement = connection.prepareStatement(consulta);
+			statement.setInt(1, codigo);
+			statement.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

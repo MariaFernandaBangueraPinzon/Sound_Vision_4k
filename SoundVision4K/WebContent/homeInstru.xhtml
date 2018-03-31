@@ -11,8 +11,8 @@
 			<div class="section white">
 				<div class="row container">
 					<div class="col s12 center">
-						<h2 jsf:rendered="#{not ingresoBean.mesaAyuda}" class="header">Bienvenido Instructor
-							#{ingresoBean.miUsuario.nombre}</h2>
+						<h2 jsf:rendered="#{not ingresoBean.mesaAyuda}" class="header">Bienvenido
+							Instructor #{ingresoBean.miUsuario.nombre}</h2>
 						<h2 jsf:rendered="#{ingresoBean.mesaAyuda}" class="header">Bienvenido
 							#{ingresoBean.miUsuario.nombre}</h2>
 						<div class="divider"></div>
@@ -25,23 +25,22 @@
 										<div class="card-content Black-text row center">
 											<span class="card-title center">¡Reserve aqui!</span>
 											<div jsf:rendered="#{not ingresoBean.visible}">
-											<i
-												class="fa fa-calendar fa-5x"></i> <br /> <br />
-											<div class="col s12">
-												<a type="submit"
-													class="waves-effect waves-light btn  col s12"
-													jsf:actionListener="#{ingresoBean.accionar}">Reservar</a>
-											</div>
+												<i class="fa fa-calendar fa-5x"></i> <br /> <br />
+												<div class="col s12">
+													<a type="submit"
+														class="waves-effect waves-light btn  col s12"
+														jsf:actionListener="#{ingresoBean.accionar}">Reservar</a>
+												</div>
 											</div>
 											<h:form rendered="#{ingresoBean.visible}">
-											<div id="" class="">
 												<div class="container">
 													<div class="modal-content center">
 														<p jsf:rendered="#{not ingresoBean.mesaAyuda}">Escoja
 															el ambiente:</p>
 
 														<div class="">
-															<h:selectOneMenu value="#{ingresoBean.nombreAmbiente}" rendered="#{not ingresoBean.mesaAyuda}">
+															<h:selectOneMenu value="#{ingresoBean.nombreAmbiente}"
+																rendered="#{not ingresoBean.mesaAyuda}">
 																<f:selectItems value="#{ingresoBean.ambientes}" />
 															</h:selectOneMenu>
 														</div>
@@ -49,7 +48,7 @@
 														<input type="text" id="fecha" value="Eliga la Fecha"
 															style="margin-top: -2px" class="datepicker"
 															jsf:value="#{ingresoBean.fecha}" required="required" />
-															<label jsf:value="#{ingresoBean.mensaje}"></label>
+														<label jsf:value="#{ingresoBean.mensaje}"></label>
 													</div>
 
 													<div class="">
@@ -59,15 +58,18 @@
 														<h:commandButton class="btn col s12 m12 l6 xl5"
 															actionListener="#{ingresoBean.accionar}" value="Cancelar"
 															style="margin-left: 10px;"></h:commandButton>
-														
+
 													</div>
 												</div>
-											</div>
-										</h:form>
+											</h:form>
+
+
+
 										</div>
 									</div>
 								</div>
-								<div jsf:rendered="#{not ingresoBean.mesaAyuda}" class="col s12 m6 l3">
+								<div jsf:rendered="#{not ingresoBean.mesaAyuda}"
+									class="col s12 m6 l3">
 									<a type="submit"
 										class="waves-effect waves-light btn  col s12 modal-trigger boton"
 										href="#modal1">Observaciones</a>
@@ -117,7 +119,7 @@
 									id="desc" class="materialize-textarea" />
 							</div>
 						</div>
-							<div class="modal-footer row">
+						<div class="modal-footer row">
 							<h:form>
 								<div class="col s12 m4 offset-m4">
 									<input type="submit"
@@ -129,18 +131,50 @@
 										jsf:action="#{ingresoBean.observaciones()}"
 										class="waves-effect waves-light btn  col s12" value="Aceptar"></input>
 								</div>
-								</h:form>
-							</div>
+							</h:form>
+						</div>
 					</div>
+
 				</form>
 			</div>
+			<h:form>
+				<h2 class="card-title center">Mis reservas</h2>
+				<h:dataTable value="#{ingresoBean.misReservas}" var="datos">
+					<h:column>
+						<f:facet name="header">Fecha</f:facet>
+																				#{datos.fecha}
+																		</h:column>
+					<h:column>
+						<f:facet name="header">Hora entrada</f:facet>
+																				#{datos.horaLlegada}
+																		</h:column>
+					<h:column>
+						<f:facet name="header">Hora salida</f:facet>
+																				#{datos.horaSalida}
+																		</h:column>
+					<h:column>
+						<f:facet name="header">motivo</f:facet>
+																				#{datos.motivo}
+																		</h:column>
+					<h:column>
+						<f:facet name="header">Ambiente</f:facet>
+																				#{datos.ambiente}
+																		</h:column>
+					<h:column>
+						<f:facet name="header">Accion</f:facet>
+						<h:commandLink
+							actionListener="#{ingresoBean.eliminarMiReserva(datos.codigo)}"
+							value="Eliminar mi reserva"></h:commandLink>
+					</h:column>
+				</h:dataTable>
+			</h:form>
 			<script type="text/javascript" src="resources/js/jquery.js"></script>
 			<script type="text/javascript" src="resources/js/materialize.js"></script>
 			<script type="text/javascript">
-			  	  $(document).ready(function(){
-				  	  $('.modal').modal();
-			  });
-			  	$('.datepicker').pickadate({
+				$(document).ready(function() {
+					$('.modal').modal();
+				});
+				$('.datepicker').pickadate({
 					selectMonths : true, // Creates a dropdown to control month
 					selectYears : 15, // Creates a dropdown of 15 years to control year,
 					today : 'hoy',

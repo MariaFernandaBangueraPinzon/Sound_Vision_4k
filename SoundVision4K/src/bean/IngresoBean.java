@@ -13,6 +13,7 @@ import dao.UsuarioDao;
 import vo.Ambiente;
 import vo.CronogramaVo;
 import vo.InformeVo;
+import vo.ReservaVo;
 import vo.Usuario;
 
 @ManagedBean
@@ -37,7 +38,7 @@ public class IngresoBean {
 	UsuarioDao miUsuarioDao=new UsuarioDao();
 	private ArrayList<InformeVo> observaciones;
 	private ArrayList<InformeVo> notificacion;
-	
+	private ArrayList<ReservaVo> misReservas;
 	public IngresoBean() {
 		miUsuario = new Usuario();
 		miAmbiente = new Ambiente();
@@ -52,6 +53,7 @@ public class IngresoBean {
 		}
 		setObservaciones(miUsuarioDao.verNotificaciones(2));
 		setNotificacion(miUsuarioDao.verNotificaciones(1));
+		misReservas=miUsuarioDao.verMisReservas();
 		res="";
 		if (miUsuario != null) {
 		if(miUsuario.getRol().equals("Administrador")) {
@@ -318,6 +320,15 @@ public class IngresoBean {
 			return hora;
 		}
 
+		public void eliminarMiReserva(int codigo){
+			System.out.println("entra");
+			System.out.println(codigo);
+			miUsuarioDao.eliminarMiReserva(codigo);
+			misReservas=miUsuarioDao.verMisReservas();
+			cronograma=miUsuarioDao.verCronograma(fecha, ambiente);
+			
+		}
+		
 		public void reservar() {
 			horaEntrada = cambiarHora(horaEntrada);
 			horaSalida = cambiarHora(horaSalida);
@@ -564,6 +575,14 @@ public class IngresoBean {
 
 		public void setInstructor(boolean instructor) {
 			this.instructor = instructor;
+		}
+
+		public ArrayList<ReservaVo> getMisReservas() {
+			return misReservas;
+		}
+
+		public void setMisReservas(ArrayList<ReservaVo> misReservas) {
+			this.misReservas = misReservas;
 		}
 
 }

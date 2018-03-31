@@ -22,7 +22,7 @@
 
 							<p>
 								Hora salida <input type="text" class="timepicker"
-									jsf:value="#{ingresoBean.horaSalida}"></input>
+									jsf:value="#{ingresoBean.horaSalida}" ></input>
 							</p>
 						</div>
 						<div class="modal-footer">
@@ -75,13 +75,12 @@
 							</h:column>
 							<h:column>
 								<f:facet name="header">Acción</f:facet>
-								<div jsf:rendered="#{not ingresoBean.mesaAyuda}"><a jsf:rendered="#{datos.accion.equals('Reservar')}"
+								<div jsf:rendered="#{not ingresoBean.mesaAyuda}"><a id="reservaModal" jsf:rendered="#{datos.accion.equals('Reservar')}"
 									jsf:actionListener="#{ingresoBean.accionCronogramaReserva(datos.hora)}"
 									href="#modal1" class="modal-trigger">Reservar</a></div>
-								<h:commandLink rendered="#{datos.accion.equals('Detalles')}"
-									actionListener="#{ingresoBean.accionCronogramaDetalles(datos.reserva)}"
-									action="#modal2" class="modal-trigger">
-									Detalles</h:commandLink>
+								<a jsf:rendered="#{datos.accion.equals('Detalles')}"
+									jsf:actionListener="#{ingresoBean.accionCronogramaDetalles(datos.reserva,datos.disponibilidad)}"
+									href="#modal2" class="modal-trigger">Detalles</a>
 									<br/>
 								<div jsf:rendered="#{not datos.accion.equals('Reservar')}">
 								<h:commandLink  value="Eliminar y reservar" action="#{ingresoBean.accionCronogramaEliminarYReservar(datos.hora)}" rendered="#{ingresoBean.mesaAyuda}" /> 
@@ -90,7 +89,8 @@
 								<h:commandLink  value="Reservar" action="#{ingresoBean.accionCronogramaEliminarYReservar(datos.hora)}" rendered="#{ingresoBean.mesaAyuda}" > 
 								</h:commandLink>
 								</div>
-								
+								<h:commandLink  value="Eliminar mi reserva" action="#{ingresoBean.eliminarMiReserva(datos.reserva)}" rendered="#{datos.accion.equals('Eliminar mi reserva')}" > 
+								</h:commandLink>
 							</h:column>
 						</h:dataTable>
 
