@@ -15,7 +15,7 @@ public class PersonaBean {
 	private String contrasena;
 	private String repcontrasena;
 	private String respuesta;
-	private List<String>listaRol=new ArrayList<>();;
+	private List<String> listaRol = new ArrayList<>();
 	private ArrayList<Usuario> listaUsuarios = new ArrayList<>();
 	private ArrayList<Ambiente> listaInventarios = new ArrayList<>();
 	private ArrayList<Ambiente> listaAmbientes = new ArrayList<>();
@@ -31,27 +31,8 @@ public class PersonaBean {
 		listasRol();
 	}
 
-	private void listasRol() {
-		listaRol.clear();
-		listaRol=miUsuarioDao.obtenerListaRol(1);
-	}
-
-	public void listaAmbiente() {
-		listaAmbientes.clear();
-		listaAmbientes = miUsuarioDao.obtenerListaAmbiente();
-
-	}
-
-	public void listaUsuario() {
-		listaUsuarios.clear();
-		listaUsuarios = miUsuarioDao.obtenerListaPersonas();
-	}
-
-	public void listaInventario() {
-		listaInventarios.clear();
-		listaInventarios = miUsuarioDao.obtenerListaInventario();
-	}
-
+	// ****************************************Contador*******************************************************************
+	
 	public int contador() {
 		int a = miUsuarioDao.contador();
 		return a;
@@ -66,7 +47,24 @@ public class PersonaBean {
 		int a = miUsuarioDao.contadorAmbientes();
 		return a;
 	}
-	
+
+	// *****************************************Agregar*********************************************************************
+
+	public String agregarInventario() {
+		miUsuarioDao.agregarInventario(miAmbiente);
+		miAmbiente = new Ambiente();
+		listaInventario();
+		return "ambiente.jsf?faces-redirect=true";
+
+	}
+
+	public String agregarAmbiente() {
+		miUsuarioDao.AmbienteAgregar(miAmbiente);
+		miAmbiente = new Ambiente();
+		listaAmbiente();
+		return "ambiente.jsf?faces-redirect=true";
+	}
+
 	public String agregarUsuario() {
 
 		miUsuario.setContrasena(contrasena);
@@ -87,36 +85,7 @@ public class PersonaBean {
 		return "registro.jsf?faces-redirect=true";
 	}
 
-	public String agregarInventario() {
-		miUsuarioDao.agregarInventario(miAmbiente);
-		miAmbiente = new Ambiente();
-		listaInventario();
-		return "ambiente.jsf?faces-redirect=true";
-
-	}
-
-	public String AmbienteAgregar() {
-		miUsuarioDao.AmbienteAgregar(miAmbiente);
-		miAmbiente = new Ambiente();
-		listaAmbiente();
-		return "Ambientes.jsf?faces-redirect=true";
-	}
-
-	public String eliminarPersona(Usuario usuario) {
-		setRespuesta(miUsuarioDao.eliminarPersona(usuario));
-		listaUsuarios.remove(usuario);
-		return "controlUsuario.jsf?faces-redirect=true";
-	}
-
-	public String editarPersona(Usuario usuario) {
-		usuario.setEditar(true);
-		return "controlUsuario.jsf";
-	}
-
-	public void guardarPersona(Usuario usuario) {
-		setRespuesta(miUsuarioDao.editarPersona(usuario));
-		usuario.setEditar(false);
-	}
+	// ******************************************Eliminar******************************************************************
 
 	public String eliminarInventario(Ambiente ambiente) {
 		setRespuesta(miUsuarioDao.eliminarInventario(ambiente));
@@ -124,13 +93,21 @@ public class PersonaBean {
 		listaInventario();
 		return "ambiente.jsf?faces-redirect=true";
 	}
-	
+
 	public String eliminarAmbientes(Ambiente ambiente) {
 		setRespuesta(miUsuarioDao.eliminarAmbiente(ambiente));
 		listaUsuarios.remove(ambiente);
 		listaAmbiente();
 		return "ambientes.jsf?faces-redirect=true";
 	}
+
+	public String eliminarPersona(Usuario usuario) {
+		setRespuesta(miUsuarioDao.eliminarPersona(usuario));
+		listaUsuario();
+		return "controlUsuario.jsf?faces-redirect=true";
+	}
+
+	// *******************************************Editar******************************************************************
 
 	public String editarInventario(Ambiente ambiente) {
 		ambiente.setEditar(true);
@@ -141,16 +118,52 @@ public class PersonaBean {
 		ambiente.setEditar(true);
 		return "ambientes.jsf";
 	}
-	
+
+	public String editarPersona(Usuario usuario) {
+		usuario.setEditar(true);
+		return "controlUsuario.jsf";
+	}
+
+	// *******************************************Guardar*****************************************************************
+
 	public void guardarInventario(Ambiente ambiente) {
 		setRespuesta(miUsuarioDao.editarInventario(ambiente));
 		ambiente.setEditar(false);
 	}
+
 	public void guardarAmbientes(Ambiente ambiente) {
 		setRespuesta(miUsuarioDao.editarAmbientes(ambiente));
 		ambiente.setEditar(false);
 	}
 
+	public void guardarPersona(Usuario usuario) {
+		setRespuesta(miUsuarioDao.editarPersona(usuario));
+		usuario.setEditar(false);
+	}
+
+	// *****************************************Listas*******************************************************************
+	private void listasRol() {
+		listaRol.clear();
+		listaRol = miUsuarioDao.obtenerListaRol(1);
+	}
+
+	public void listaAmbiente() {
+		listaAmbientes.clear();
+		listaAmbientes = miUsuarioDao.obtenerListaAmbiente();
+		listaInventario();
+	}
+
+	public void listaUsuario() {
+		listaUsuarios.clear();
+		listaUsuarios = miUsuarioDao.obtenerListaPersonas();
+	}
+
+	public void listaInventario() {
+		listaInventarios.clear();
+		listaInventarios = miUsuarioDao.obtenerListaInventario();
+	}
+
+	// **************************************GetSet*************************************************************
 
 	public String getRespuesta() {
 		return respuesta;

@@ -5,51 +5,48 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 <head>
-<link rel="stylesheet" href="resources/css/materialize.css"></link>
-<link rel="stylesheet" href="resources/css/estiloNotificaciones.css"></link>
+<link rel="stylesheet" href="../resources/css/materialize.css"></link>
+<link rel="stylesheet" href="../resources/css/estilos.css"></link>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 	rel="stylesheet"></link>
 <meta charset="UTF-8"></meta>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
 <meta http-equiv="X-UA-Compatible" content="ie=edge"></meta>
 <link rel="stylesheet" type="text/css"
-	href="resources/css/font-awesome.min.css" />
+	href="../resources/css/font-awesome.min.css" />
 <title>#{tituloPagina}</title>
 </head>
 <body>
 	<h:form>
 		<nav class="row teal darken-2 ">
-			<div class="nav-wrapper col hide-on-small-only m7 l7">
+			<div class="nav-wrapper hide-on-small-only col m7 l7 ">
 				<div class="brand-logo ">
-					<div class="no">Sound Vision 4K</div>
+					<div >Sound Vision 4K</div>
 				</div>
 			</div>
-			<div class="col s11 m5 l5 offset-s1">
-				<div class="col s12 offset-m2  ">
-
-					<div class="row ">
-						<a class="col l3 m3 s3   tooltipped"
-							href="#{ingresoBean.enlacePagina(1)}" data-position="bottom"
-							data-delay="50" data-tooltip="Inicio"><i class="fa fa-home "></i></a>
-
-						<a class="col l3 m3 s3  tooltipped"
-							href="#{ingresoBean.enlacePagina(2)}" data-position="bottom"
-							data-delay="50" data-tooltip="Perfil"><i class="fa fa-user"></i></a>
-
+			<div class="nav-wrapper col s12 m5 row center-align">
+						<a class="col s3  tooltipped"
+						href="#{ingresoBean.enlacePagina(1)}" data-position="bottom"
+						data-delay="50" data-tooltip="Inicio">
+						<i class="fa fa-home fa-2x"></i>
+						</a>
+						
 						<a jsf:rendered="#{not ingresoBean.mesaAyuda}"
-							class="col l3 m3 s3   tooltipped" href="" data-position="bottom"
-							data-delay="50" data-tooltip="Observaciones"
-							jsf:actionListener="#{ingresoBean.activarObservaciones}"><i
-							class="fa fa-comment"></i></a> <a
-							jsf:rendered="#{not ingresoBean.mesaAyuda}"
-							class="col l3 m3 s3  tooltipped" href="" data-position="bottom"
-							data-delay="50" data-tooltip="Notificaciones"
-							jsf:actionListener="#{ingresoBean.activarNotificaciones}"><i
-							class="fa fa-bell"></i></a>
+						class="col l3 m3 s3  tooltipped " href="" data-position="bottom"
+						data-delay="50" data-tooltip="Notificaciones"
+						jsf:actionListener="#{ingresoBean.activarNotificaciones}"><i
+						class="fa fa-bell fa-2x"></i><span class="ContentPage-Nav-indicator bg-danger col s1">2</span></a> 
+						
+						<a jsf:rendered="#{not ingresoBean.mesaAyuda}"
+						class="col l3 m3 s3   tooltipped" href="" data-position="bottom"
+						data-delay="50" data-tooltip="Observaciones"
+						jsf:actionListener="#{ingresoBean.activarObservaciones}"><i
+						class="fa fa-comment fa-2x "></i><span class="ContentPage-Nav-indicator bg-danger col s1">4</span></a> 
+						
+						<a class="col l3 m3 s3  tooltipped"
+						href="#{ingresoBean.enlacePagina(2)}" data-position="bottom"
+						data-delay="50" data-tooltip="Perfil"><i class="fa fa-user fa-2x"></i></a>
 
-
-					</div>
-				</div>
 			</div>
 		</nav>
 		<h:dataTable class="tabla" value="#{ingresoBean.notificacion}"
@@ -89,12 +86,42 @@
 	</h:form>
 	<ui:insert name="contenido" />
 
-	<script type="text/javascript" src="resources/js/jquery.js"></script>
-	<script type="text/javascript" src="resources/js/materialize.js"></script>
-	<script>
-		$(document).ready(function() {
-			$('.parallax').parallax();
+	<script type="text/javascript" src="../resources/js/jquery.js"></script>
+	<script type="text/javascript" src="../resources/js/materialize.js"></script>
+	<script> 
+	  $(document).ready(function() {
+		    $('select').material_select();
+		    $('.modal').modal();
+		  });
+	  $('.datepicker').pickadate({
+			selectMonths : true, // Creates a dropdown to control month
+			selectYears : 15, // Creates a dropdown of 15 years to control year,
+			today : 'hoy',
+			clear : 'Limpiar',
+			close : 'listo',
+			closeOnSelect : true
+		// Close upon selecting a date,
 		});
+
+	  $('.timepicker').pickatime({
+	    default: 'now', // Set default time: 'now', '1:30AM', '16:30'
+	    fromnow: 0,       // set default time to * milliseconds from now (using with default = 'now')
+	    twelvehour: true, // Use AM/PM or 24-hour format
+	    donetext: 'OK', // text for done-button
+	    cleartext: 'Clear', // text for clear-button
+	    canceltext: 'Cancel', // Text for cancel-button
+	    autoclose: false, // automatic close timepicker
+	    ampmclickable: true, // make AM PM clickable
+	    aftershow: function(){} //Function for after opening timepicker
+	    });
+
+
+		 $(document).ready(function(){
+		    // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
+		    $('.modal').modal();
+		  });
+		 
+		
 	</script>
 </body>
 </html>

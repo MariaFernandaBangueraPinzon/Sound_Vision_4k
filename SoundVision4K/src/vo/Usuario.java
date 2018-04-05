@@ -9,13 +9,15 @@ public class Usuario {
 	private String correo;
 	private String contrasena;
 	private String repcontrasena;
+	private String estado;
+	private boolean estadoB;
 	private boolean editar;
 	private boolean consulta;
 
-	public Usuario(){
-		
+	public Usuario() {
+
 	}
-	
+
 	public String getNombre() {
 		return nombre;
 	}
@@ -86,5 +88,21 @@ public class Usuario {
 
 	public void setConsulta(boolean consulta) {
 		this.consulta = consulta;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
+	public boolean isEstadoB() {
+		return estadoB;
+	}
+
+	public void setEstadoB(boolean estadoB) {
+		this.estadoB = estadoB;
 	}
 }

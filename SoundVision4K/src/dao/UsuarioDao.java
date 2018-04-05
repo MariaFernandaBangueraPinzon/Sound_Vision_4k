@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import bean.MandarEmail;
 import conexion.Conexion;
 import vo.Ambiente;
 import vo.CronogramaVo;
@@ -17,7 +16,6 @@ import vo.Usuario;
 
 public class UsuarioDao {
 
-	MandarEmail email;
 	String tablaHora;
 	String tabla;
 	String resp = "";
@@ -75,33 +73,36 @@ public class UsuarioDao {
 		ResultSet result = null;
 
 		miUsuario = new Usuario();
-		connection = miConexion.getConnection();
-		String consulta = "SELECT * FROM usuarioreser WHERE emailUsu =? AND contraseniaUsu=?;";
+		if (miConexion.isMysql() == true) {
+			connection = miConexion.getConnection();
+			String consulta = "SELECT * FROM usuarioreser WHERE emailUsu =? AND contraseniaUsu=?;";
 
-		try {
-			if (connection != null) {
-				statement = connection.prepareStatement(consulta);
-				statement.setString(1, correo);
-				statement.setString(2, contrasena);
-				result = statement.executeQuery();
+			try {
+				if (connection != null) {
+					statement = connection.prepareStatement(consulta);
+					statement.setString(1, correo);
+					statement.setString(2, contrasena);
+					result = statement.executeQuery();
 
-				if (result.next() == true) {
-					miUsuario.setRol(result.getString("rolUsu"));
-					miUsuario.setDocumento(result.getString("cedulaUsu"));
-					miUsuario.setNombre(result.getString("nombreUsu"));
-					miUsuario.setTelefono(result.getString("telUsu"));
-					miUsuario.setContrasena(result.getString("contraseniaUsu"));
-					miUsuario.setCorreo(result.getString("emailUsu"));
-				} else {
-					System.out.println("El usuario no esta registrado");
-					miUsuario=null;
+					if (result.next() == true) {
+						miUsuario.setRol(result.getString("rolUsu"));
+						miUsuario.setDocumento(result.getString("cedulaUsu"));
+						miUsuario.setNombre(result.getString("nombreUsu"));
+						miUsuario.setTelefono(result.getString("telUsu"));
+						miUsuario.setContrasena(result.getString("contraseniaUsu"));
+						miUsuario.setCorreo(result.getString("emailUsu"));
+					} else {
+						System.out.println("El usuario no esta registrado");
+						miUsuario = null;
+					}
+
 				}
-
+			} catch (Exception e) {
+				System.out.println("Error al consultar el usuario");
 			}
-		} catch (Exception e) {
-			System.out.println("Error al consultar el usuario");
+		} else {
+			miUsuario = null;
 		}
-
 		return miUsuario;
 	}
 
@@ -153,6 +154,11 @@ public class UsuarioDao {
 					miUsuario.setTelefono(result.getString("telUsu"));
 					miUsuario.setDocumento(result.getString("CedulaUsu"));
 					miUsuario.setCorreo(result.getString("emailUsu"));
+					if (result.getString("estado").equals("activo")) {
+						miUsuario.setEstadoB(true);
+					} else {
+						miUsuario.setEstadoB(false);
+					}
 					listaPersonas.add(miUsuario);
 				}
 
@@ -172,10 +178,16 @@ public class UsuarioDao {
 
 		String resp = "";
 		try {
-			String delete = "DELETE FROM usuario WHERE documento= ? ";
+			String delete = "UPDATE `usuarioreser` SET estado=? WHERE `cedulaUsu`=?;";
 
 			PreparedStatement statement = connection.prepareStatement(delete);
-			statement.setString(1, usuario.getDocumento());
+			if (usuario.isEstadoB()==true) {
+				usuario.setEstado("desactivo");
+			} else {
+				usuario.setEstado("activo");
+			}
+			statement.setString(1, usuario.getEstado());
+			statement.setString(2, usuario.getDocumento());
 
 			statement.executeUpdate();
 
@@ -196,7 +208,7 @@ public class UsuarioDao {
 		Conexion miConexion = new Conexion();
 		connection = miConexion.getConnection();
 		try {
-			String consulta = "UPDATE usuario SET nombre=?, telefono=?, correo=? WHERE documento=?;";
+			String consulta = "UPDATE usuarioreser SET nombreUsu=?, telUsu=?, emailUsu=? WHERE cedulaUsu=?;";
 			PreparedStatement preStatement = connection.prepareStatement(consulta);
 
 			preStatement.setString(1, usuario.getNombre());
@@ -279,8 +291,8 @@ public class UsuarioDao {
 
 		return a;
 	}
-	
-	public int contadorReservas(){
+
+	public int contadorReservas() {
 		prepararConexion();
 		ResultSet result = null;
 		int a = 0;
@@ -307,8 +319,8 @@ public class UsuarioDao {
 
 		return a;
 	}
-	
-	public int contadorAmbientes(){
+
+	public int contadorAmbientes() {
 		prepararConexion();
 		ResultSet result = null;
 		int a = 0;
@@ -335,7 +347,6 @@ public class UsuarioDao {
 
 		return a;
 	}
-	
 
 	public ArrayList<Ambiente> obtenerListaInventario() {
 		Connection connection = null;
@@ -675,27 +686,29 @@ public class UsuarioDao {
 	}
 
 	public ArrayList<InformeVo> verNotificaciones(int campo) {
-
 		ArrayList<InformeVo> noti = new ArrayList<>();
-		prepararConexion();
-		String consulta = "SELECT DISTINCT * from informe, tipoInforme where destino =? and tipoInforme = ? group by nis;";
-		ResultSet result = null;
-		try {
-			if (connection != null) {
-				statement = connection.prepareStatement(consulta);
-				statement.setString(1, miUsuario.getDocumento());
-				statement.setInt(2, campo);
-				result = statement.executeQuery();
-				while (result.next() == true) {
-					noti.add(new InformeVo(result.getInt("nis"), result.getInt("tipoInforme"),
-							result.getString("destinatario"), result.getString("destino"),
-							result.getString("descripcion"), result.getInt("reserva")));
-				}
+		if (miConexion.isMysql() == true) {
+			prepararConexion();
+			String consulta = "SELECT DISTINCT * from informe, tipoInforme where destino =? and tipoInforme = ? group by nis;";
+			ResultSet result = null;
+			try {
+				if (connection != null) {
+					statement = connection.prepareStatement(consulta);
+					statement.setString(1, miUsuario.getDocumento());
+					statement.setInt(2, campo);
+					result = statement.executeQuery();
+					while (result.next() == true) {
+						noti.add(new InformeVo(result.getInt("nis"), result.getInt("tipoInforme"),
+								result.getString("destinatario"), result.getString("destino"),
+								result.getString("descripcion"), result.getInt("reserva")));
+					}
 
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
+
 		return noti;
 	}
 
@@ -851,7 +864,7 @@ public class UsuarioDao {
 		prepararConexion();
 		ResultSet result = null;
 		int resp = 0;
-		String consulta = "SELECT DATE_ADD(CURDATE(), INTERVAL "+ suma +" DAY)<=? AS respuesta;";
+		String consulta = "SELECT DATE_ADD(CURDATE(), INTERVAL " + suma + " DAY)<=? AS respuesta;";
 		try {
 			statement = connection.prepareStatement(consulta);
 			statement.setString(1, fecha);
@@ -885,7 +898,7 @@ public class UsuarioDao {
 
 	public CronogramaVo disponibilidadCronograma(String hora, String fecha, int ambiente) {
 		prepararConexion();
-		int reserva=0;
+		int reserva = 0;
 		String accion = "Detalles";
 		String disponibilidad = "Disponible";
 		CronogramaVo miCronograma = new CronogramaVo();
@@ -902,9 +915,9 @@ public class UsuarioDao {
 						result.getString("fechaReser"), result.getString("HoraLlegadaReser"),
 						result.getString("HoraSalidaReser"), result.getInt("ambienteReser"),
 						result.getString("motivoReser")));
-				
+
 				disponibilidad = "Solicitado.";
-				reserva=result.getInt("codReser");
+				reserva = result.getInt("codReser");
 			} else {
 				consulta = "SELECT * FROM horarioReser, reservaAmb WHERE hora=? AND reserva = codReser AND fechaReser=?  AND ambienteReser = ?";
 				statement = connection.prepareStatement(consulta);
@@ -917,14 +930,14 @@ public class UsuarioDao {
 							result.getString("fechaReser"), result.getString("HoraLlegadaReser"),
 							result.getString("HoraSalidaReser"), result.getInt("ambienteReser"),
 							result.getString("motivoReser")));
-					if(result.getString("usuarioReser").equals(miUsuario.getDocumento())){
-						disponibilidad="Reservado por mi";
-						accion="Eliminar mi reserva";
-					}else{
+					if (result.getString("usuarioReser").equals(miUsuario.getDocumento())) {
+						disponibilidad = "Reservado por mi";
+						accion = "Eliminar mi reserva";
+					} else {
 						disponibilidad = "Reservado.";
 					}
-					
-					reserva=result.getInt("codReser");
+
+					reserva = result.getInt("codReser");
 				} else {
 					accion = "Reservar";
 				}
@@ -958,7 +971,7 @@ public class UsuarioDao {
 				|| !(verDiponibilidad(fecha, horaSalida, horaEntrada, 5, "horarioReser") == true)) {
 			String consulta = "";
 			String fechaC = "";
-			String correo="";
+			String correo = "";
 			String horaE = "";
 			String horaS = "";
 			ResultSet result = null;
@@ -980,8 +993,8 @@ public class UsuarioDao {
 						statement = connection.prepareStatement(consulta);
 						statement.setString(1, usuario);
 						result = statement.executeQuery();
-						if(result.next()){
-							correo=result.getString("emailUsu");
+						if (result.next()) {
+							correo = result.getString("emailUsu");
 						}
 					} else {
 						System.out.println("4");
@@ -1032,9 +1045,6 @@ public class UsuarioDao {
 							+ " fue eliminada por motivo de una videoconferencia," + " disculpe la molestia");
 					statement.setInt(5, reservasEnHora.get(i).getCodigo());
 					statement.execute();
-					email = new MandarEmail();
-					email.enviarCorreo("soundvision4k2@gmail.com", correo, "proyectoSoundVision4k", "Novedad en su reserva", "La reserva para el " + fechaC + " desde " + horaE + " hasta " + horaS
-							+ " fue eliminada por motivo de una videoconferencia," + " disculpe la molestia");
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -1196,7 +1206,7 @@ public class UsuarioDao {
 		String horaSalida = "";
 		String motivo = "";
 		int ambiente = 0;
-		String correo="";
+		String correo = "";
 		String descripcion = "rechazada";
 		prepararConexion();
 		ResultSet result = null;
@@ -1218,7 +1228,7 @@ public class UsuarioDao {
 			statement = connection.prepareStatement(consulta);
 			statement.setString(1, usuario);
 			result = statement.executeQuery();
-			if(result.next()){
+			if (result.next()) {
 				miUsuario.setCorreo(result.getString("emailUsu"));
 			}
 			if (respuesta.equals("aceptada")) {
@@ -1247,10 +1257,6 @@ public class UsuarioDao {
 					+ horaSalida + " fue " + descripcion);
 			statement.setInt(5, reserva);
 			statement.execute();
-			email = new MandarEmail();
-			email.enviarCorreo("soundvision4k2@gmail.com", correo, "proyectoSoundVision4k", "Respuesta solicitud", "La solicitud de reserva para el " + fecha + " desde " + horaEntrada + " hasta "
-					+ horaSalida + " con motivo "+motivo+" fue " + descripcion);
-
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
@@ -1259,18 +1265,18 @@ public class UsuarioDao {
 
 	public String detalles(int reserva, String tabla) {
 		prepararConexion();
-		ResultSet result=null;
+		ResultSet result = null;
 		String mensaje = "";
-		String consulta = "SELECT * FROM "+ tabla +" where codReser=?";
+		String consulta = "SELECT * FROM " + tabla + " where codReser=?";
 		try {
 			statement = connection.prepareStatement(consulta);
 			statement.setInt(1, reserva);
-			result=statement.executeQuery();
-			if(result.next()){
-				mensaje="Motivo = "+result.getString("motivoReser")+"\nUsuario = "+ result.getString("usuarioReser");
+			result = statement.executeQuery();
+			if (result.next()) {
+				mensaje = "Motivo = " + result.getString("motivoReser") + "\nUsuario = "
+						+ result.getString("usuarioReser");
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return mensaje;
@@ -1300,38 +1306,34 @@ public class UsuarioDao {
 
 	public ArrayList<ReservaVo> verMisReservas() {
 		prepararConexion();
-		ArrayList<ReservaVo> misReservas= new ArrayList<>();
-		ResultSet result=null;
-		String consulta="SELECT * FROM reservaamb where usuarioReser = ?";
-		try {
-			statement = connection.prepareStatement(consulta);
-			statement.setString(1, miUsuario.getDocumento());
-			result=statement.executeQuery();
-			while(result.next()){
-				misReservas.add(new ReservaVo(result.getInt("codReser"),
-						"", 
-						result.getString("fechaReser"),
-						result.getString("horaLlegadaReser"),
-						result.getString("horaSalidaReser"),
-						result.getInt("ambienteReser"),
-						result.getString("motivoReser")));
+		ArrayList<ReservaVo> misReservas = new ArrayList<>();
+		ResultSet result = null;
+		if (miConexion.isMysql() == true) {
+			String consulta = "SELECT * FROM reservaamb where usuarioReser = ?";
+			try {
+				statement = connection.prepareStatement(consulta);
+				statement.setString(1, miUsuario.getDocumento());
+				result = statement.executeQuery();
+				while (result.next()) {
+					misReservas.add(new ReservaVo(result.getInt("codReser"), "", result.getString("fechaReser"),
+							result.getString("horaLlegadaReser"), result.getString("horaSalidaReser"),
+							result.getInt("ambienteReser"), result.getString("motivoReser")));
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		return misReservas;
 	}
 
 	public void eliminarMiReserva(int codigo) {
 		prepararConexion();
-		String consulta="delete FROM reservaamb where codReser = ?";
+		String consulta = "delete FROM reservaamb where codReser = ?";
 		try {
 			statement = connection.prepareStatement(consulta);
 			statement.setInt(1, codigo);
 			statement.execute();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
